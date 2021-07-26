@@ -89,6 +89,13 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
+    "io.armet.unity.buildexporter": {
+      "version": "https://github.com/ar-met/unity-build-exporter.git?path=/Assets/BuildExporter#1.0.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "42e056867485b6d1c20b6b8eda567eaafedd76f3"
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,
