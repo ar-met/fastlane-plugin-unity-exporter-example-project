@@ -19,5 +19,15 @@ platform :ios do
   desc "Description of what the lane does"
   lane :custom_lane do
     # add actions here: https://docs.fastlane.tools/actions
+    
+    unity_export(build_target: "iOS", new_version_code: "increment")
+    unity_commit_version_bump
+
+    UI.important("Note that the actual archiving will succeed! '** ARCHIVE SUCCEEDED **' The whole build will fail, because this app does not exist in your AppStore Connect. This will not happen with your actual app, as it will exist in your AppStore Connect.")
+    if UI.confirm("Proceed?")
+      build_app(scheme: "Unity-iPhone", project: "unity-export/Unity-iPhone.xcodeproj")
+    end
+
+    # TODO next step: upload to AppStore Connect
   end
 end
