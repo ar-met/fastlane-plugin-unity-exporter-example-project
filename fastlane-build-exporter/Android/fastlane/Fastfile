@@ -17,6 +17,31 @@ default_platform(:android)
 
 platform :android do
   desc "Runs all the tests"
+
+  lane :custom_lane do
+    unity_export(build_target: "Android", new_version_code: "increment")
+    unity_commit_version_bump
+
+    if FastlaneCore::Helper.is_mac?
+      sh "chmod +x ../unity-export/gradlew" # making sure that we have the permission to execute gradle
+    elsif FastlaneCore::Helper.is_windows?
+      # nothing to do here
+    elsif FastlaneCore::Helper.linux?
+      # TODO same as Mac?
+    end 
+
+    gradle(
+      project_dir: "unity-export",
+      task: "assemble",
+      build_type: "Release"
+    )
+
+    UI.important("Find the APK at '#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}'")
+
+    # TODO next step: upload to PlayStore
+
+  end
+
   lane :test do
     gradle(task: "test")
   end
