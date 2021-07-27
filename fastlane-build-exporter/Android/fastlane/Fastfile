@@ -20,25 +20,18 @@ platform :android do
 
   lane :custom_lane do
     unity_export(build_target: "Android", new_version_code: "increment")
-    unity_commit_version_bump
+    #unity_commit_version_bump
 
-    if FastlaneCore::Helper.is_mac?
-      sh "chmod +x ../unity-export/gradlew" # making sure that we have the permission to execute gradle
-    elsif FastlaneCore::Helper.is_windows?
-      # nothing to do here
-    elsif FastlaneCore::Helper.linux?
-      # TODO same as Mac?
-    end 
+    # note that no separate gradle build via fastlane is necessary as an aab was already created via Unity
 
-    gradle(
-      project_dir: "unity-export",
-      task: "assemble",
-      build_type: "Release"
-    )
+    # in case we have multiple aabs of different versions and version codes, we just take the one that was last created
+    aabs = Dir.glob("../unity-export/*.aab")
+    aab = aabs.sort_by { |f| File.ctime(f) }.last
 
-    UI.important("Find the APK at '#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}'")
+    UI.message("Found aab: '#{aab}'")
 
     # TODO next step: upload to PlayStore
+    #upload_to_play_store(aab: aab)
 
   end
 
